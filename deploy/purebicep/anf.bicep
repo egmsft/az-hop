@@ -46,6 +46,7 @@ resource anfHome 'Microsoft.NetApp/netAppAccounts/capacityPools/volumes@2021-10-
   properties: {
     creationToken: 'home-${resourcePostfix}'
     serviceLevel: serviceLevel
+    networkFeatures: 'Standard'
     subnetId: subnetId
     protocolTypes: union([
         'NFSv3'
