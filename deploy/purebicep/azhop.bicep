@@ -95,6 +95,12 @@ var config = {
     accounting_enabled: contains(azhopConfig.slurm, 'accounting_enabled') ? azhopConfig.slurm.accounting_enabled : false
   }
 
+  private_dns: {
+    create: contains(azhopConfig, 'private_dns') && contains(azhopConfig.private_dns, 'create') ? azhopConfig.private_dns.create : false
+    name: contains(azhopConfig, 'private_dns') && contains(azhopConfig.private_dns, 'name') ? azhopConfig.private_dns.name : 'hpc.azure'
+    registration_enabled: contains(azhopConfig, 'private_dns') && contains(azhopConfig.private_dns, 'registration_enabled') ? azhopConfig.private_dns.registration_enabled : false
+  }
+
   enable_remote_winviz : enableWinViz
   deploy_sig: contains(azhopConfig, 'image_gallery') && contains(azhopConfig.image_gallery, 'create') ? azhopConfig.image_gallery.create : false
 
@@ -745,11 +751,12 @@ module azhopNfsFiles './nfsfiles.bicep' = if (config.azurefiles.create ) {
   }
 }
 
-module azhopPrivateZone './privatezone.bicep' = {
+module azhopPrivateZone './privatezone.bicep' = if (config.private_dns.create) {
   name: 'azhopPrivateZone'
   params: {
     privateDnsZoneName: 'hpc.azure'
     vnetId: azhopNetwork.outputs.vnetId
+    registrationEnabled: config.private_dns.registration_enabled
   }
 }
 
