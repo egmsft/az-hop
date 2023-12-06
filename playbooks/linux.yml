@@ -42,6 +42,14 @@
   - name: Gather facts for first time
     setup:
 
+  - name: setup private domain if not set in resolv.conf
+    shell: |
+      if ! grep -q {{private_dns.name}} /etc/resolv.conf; then
+        nmcli con mod "System eth0" ipv4.dns-search "{{private_dns.name}}"
+        systemctl restart NetworkManager
+      fi
+    when: private_dns.create | default(false)
+
   - name: Read Password from KV
     command: az keyvault secret show --vault-name {{key_vault}} -n {{admin_user}}-password --query "value" -o tsv
     delegate_to: localhost
