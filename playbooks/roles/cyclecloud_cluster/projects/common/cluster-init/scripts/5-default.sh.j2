@@ -3,6 +3,13 @@
 # - jq installed
 
 
+# Append the domain name in the domain search if defined
+{% if private_dns.name is defined %}
+if ! grep -q {{private_dns.name}} /etc/resolv.conf; then
+    sed -i 's/search /search {{private_dns.name}} /' /etc/resolv.conf
+fi
+{% endif %}
+
 # Apply default configuration to the node
 # Remote read access to the cluster init script files for all users
 chmod 700 -R /mnt/cluster-init
