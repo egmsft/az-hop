@@ -46,6 +46,11 @@
     shell: |
       if ! grep -q {{private_dns.name}} /etc/resolv.conf; then
         sed -i 's/search /search {{private_dns.name}} /' /etc/resolv.conf
+        # Stop NetworkManager overwriting /etc/resolv.conf
+        cat > /etc/NetworkManager/conf.d/90-dns-none.conf << EOF
+        [main]
+        dns=none
+      EOF
       fi
     when: 
       - private_dns.create | default(false)
