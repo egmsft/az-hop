@@ -103,7 +103,6 @@
       cc_admin_user: '{{admin_user}}'
       cc_password: '{{password.stdout}}'
       cc_queues: '{{queues}}'
-      cc_remoteviz: '{{remoteviz}}'
       cc_image_lookup: '{{image_lookup}}'
       cc_domain: '{{domain_name}}'
       cc_queue_manager: '{{ queue_manager | default("openpbs") }}'

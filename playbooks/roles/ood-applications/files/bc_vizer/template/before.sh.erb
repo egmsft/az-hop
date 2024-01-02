@@ -9,5 +9,22 @@ port=$(find_port ${host})
 <%- if OodAppkit.clusters[context.cluster].job_config[:adapter] == 'pbspro' -%>
 # TODO : Use the job ID for the container name
 export CONTAINER_NAME=trame.$PBS_JOBID
+
+<%- 
+require "yaml"
+node_arrays = YAML.load_file("/etc/ood/config/apps/bc_desktop/config/node_arrays.yml")
+slot_type = node_arrays.find { |slot_type| slot_type["name"] == context.target }
+
+gpu_count = slot_type["gpuCount"].to_i 
+-%>
+
+<%- if gpu_count > 0 -%>
+# replace '${gl}' with the appropriate value
+gl=egl
+<%- else -%>
+gl=osmesa
+<%- end -%>
+
+# get the container
 $THIS_DIR/get_container.sh <%=context.container_image%> $CONTAINER_NAME
 <%- end -%>

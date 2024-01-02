@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
+<%- 
+require "yaml"
+node_arrays = YAML.load_file("/etc/ood/config/apps/bc_desktop/config/node_arrays.yml")
+slot_type = node_arrays.find { |slot_type| slot_type["name"] == context.target }
 
-<%- gpu = context.target.include?("3d") -%>
+gpu_count = slot_type["gpuCount"].to_i 
+-%>
 
 # Clean the environment
 module purge
@@ -30,8 +35,8 @@ cd "${HOME}"
 
 VMD_HOME_DIR="<%= context.vmd_home %>"
 
-<%- if gpu -%>
 set -x
+<%- if gpu_count > 0 -%>
 xfce4-terminal -e "vglrun $VMD_HOME_DIR/bin/vmd" -T "VMD Terminal" --disable-server
 <%- else -%>
 set -x
