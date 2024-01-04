@@ -38,20 +38,26 @@
           curl -k --connect-timeout 30 -u "{{users[0].name}}:{{user_password.stdout}}" "https://{{ondemand_fqdn}}/cyclecloud/clusters/{{cluster_name}}/status?nodes" | jq '[.nodearrays[] | {name: .name, machineType: .buckets[0].definition.machineType, vcpuCount: .buckets[0].virtualMachine.vcpuCount, gpuCount: .buckets[0].virtualMachine.gpuCount}]' | yq e -P > /etc/ood/config/apps/bc_desktop/config/node_arrays.yml
       args:
         executable: /bin/bash
-      delegate_to: localhost
-      connection: local
-      become: false
-
-    - name: create config directory
-      file:
-        path: /etc/ood/config/apps/bc_desktop/config
-        state: directory
       delegate_to: ondemand
+      become: true
 
-    - name: Copy node_arrays files only if ondemand has been installed
-      copy:
-        src: 'node_arrays.yml'
-        dest: '/etc/ood/config/apps/bc_desktop/config/node_arrays.yml'
+    - name: Copy the viz node configuration file
+      template:
+        src: 'viz_nodes.yml.j2'
+        dest: '/etc/ood/config/apps/bc_desktop/config/viz_nodes.yml'
       delegate_to: ondemand
+      become: true
+
+    # - name: create config directory
+    #   file:
+    #     path: /etc/ood/config/apps/bc_desktop/config
+    #     state: directory
+    #   delegate_to: ondemand
+
+    # - name: Copy node_arrays files only if ondemand has been installed
+    #   copy:
+    #     src: 'node_arrays.yml'
+    #     dest: '/etc/ood/config/apps/bc_desktop/config/node_arrays.yml'
+    #   delegate_to: ondemand
   when: marker.stat.exists == true
 
