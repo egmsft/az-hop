@@ -200,7 +200,11 @@
                 "alerting": {
                     "description": "If set to true, it will create alert rules associated with az-hop. Enablement of alerting will require the specification of an admin email to send alerts to.",
                     "$ref": "#/definitions/alerting"
-                }
+                },
+                "private_dns": {
+                    "description": "Configuration of a private DNS zone to create",
+                    "$ref": "#/definitions/private_dns"
+                }                
             },
             "required": [
                 "ad",
@@ -228,6 +232,17 @@
                 "windows_base_image"
             ],
             "title": "az-hop"
+        },
+        "private_dns": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "create": {"type": "boolean", "default": false},
+                "name": {"type": "string"},
+                "registration_enabled": {"type": "boolean", "default": false}
+            },
+            "required": [ "create", "name" ],
+            "title": "privateDNSZone"
         },
         "logAnalytics": {
             "type": "object",
@@ -977,6 +992,14 @@
                     "description": "Whether the remote visualization node can be shared by multiple users. Defaults to false",
                     "type": "boolean",
                     "default": false
+                },
+                "location" : {
+                    "description": "Azure Location of the queue. Only used it for multi-region scenario. Defaults to the location of the az-hop deployment",
+                    "type": "string"
+                },
+                "subnet" : {
+                    "description": "Subnet of the queue. Only used and required for multi-region scenario. Format for the remove subnet is <resource_group>/<vnet_name>/<subnet_name> Defaults to the subnet of the az-hop deployment",
+                    "type": "string"
                 }
             },
             "required": [

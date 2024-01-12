@@ -42,6 +42,20 @@
   - name: Gather facts for first time
     setup:
 
+  # use the private DNS when defined
+  - name: setup private domain if not set in resolv.conf
+    shell: |
+      if ! grep -q {{private_dns.name}} /etc/resolv.conf; then
+        sed -i 's/search /search {{private_dns.name}} /' /etc/resolv.conf
+        # Stop NetworkManager overwriting /etc/resolv.conf
+        cat > /etc/NetworkManager/conf.d/90-dns-none.conf << EOF
+        [main]
+        dns=none
+      EOF
+      fi
+    when: 
+      - private_dns.create | default(false)
+
   - name: Read Password from KV
     command: az keyvault secret show --vault-name {{key_vault}} -n {{admin_user}}-password --query "value" -o tsv
     delegate_to: localhost
