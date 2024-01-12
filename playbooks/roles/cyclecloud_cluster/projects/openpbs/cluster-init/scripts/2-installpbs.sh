@@ -17,5 +17,6 @@ sed -i 's/CHANGE_THIS_TO_PBS_PRO_SERVER_HOSTNAME/scheduler/' /var/spool/pbs/mom_
 sed -i "s/^if /#if /g" /opt/pbs/lib/init.d/limits.pbs_mom
 sed -i "s/^fi/#fi /g" /opt/pbs/lib/init.d/limits.pbs_mom
 
-systemctl restart pbs || exit 1
+echo "Restart PBS"
+retry_command "systemctl restart pbs"
 echo "PBS Restarted"
