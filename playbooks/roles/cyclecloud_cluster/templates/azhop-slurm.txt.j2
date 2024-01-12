@@ -23,7 +23,6 @@ Autoscale = true
     ShutdownPolicy = Terminate
 
     CloudInit = '''#!/bin/bash
-set -x
 echo "cloud-init is removing slurm from the image ..." >> /tmp/cloud-init.txt
 date >> /tmp/cloud-init.txt
 case `grep "^ID=" /etc/os-release | cut -d= -f2 | xargs` in
@@ -121,11 +120,6 @@ echo "cloud-init done" >> /tmp/cloud-init.txt
     ImagePlan.Product = {{ plan_details[1] }}
     ImagePlan.Name = {{ plan_details[2] }}
   {% endif %}
-  {% if queue.location is defined %}
-    SubnetId = {{ queue.subnet }}
-    Region = {{ queue.location }}    
-  {% endif %}
-
         [[[configuration]]]
         slurm.partition = {{ queue.name }}
       {% if loop.index == 1 %}
