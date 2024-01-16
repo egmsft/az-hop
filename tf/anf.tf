@@ -48,7 +48,7 @@ resource "azurerm_netapp_volume" "home" {
   subnet_id           = local.create_netapp_subnet ? azurerm_subnet.netapp[0].id : data.azurerm_subnet.netapp[0].id
   protocols           = local.anf_dual_protocol ?  ["NFSv3", "CIFS"] : ["NFSv3"]
   security_style      = "unix"
-  storage_quota_in_gb = local.anf_size * 1024
+  storage_quota_in_gb = local.homefs_size_tb * 1024
   network_features    = "Standard"
 
   export_policy_rule {

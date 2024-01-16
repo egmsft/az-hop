@@ -11,6 +11,8 @@
   vars:
     ondemand_version: 2.0.29
     ood_core_version: 0.22.0
+    yq_version: v4.40.5
+    yq_binary: yq_linux_amd64
 
   tasks:
   - name: Wait 300 seconds for the nodes to be ready
