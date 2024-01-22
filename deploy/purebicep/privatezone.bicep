@@ -1,6 +1,5 @@
 param privateDnsZoneName string = 'hpc.azure'
 param vnetId string
-param registrationEnabled bool = false
 
 resource privateDnsZoneName_resource 'Microsoft.Network/privateDnsZones@2018-09-01' = {
   name: privateDnsZoneName
@@ -12,7 +11,7 @@ resource privateDnsZoneName_az_hop 'Microsoft.Network/privateDnsZones/virtualNet
   name: 'az-hop'
   location: 'global'
   properties: {
-    registrationEnabled: registrationEnabled
+    registrationEnabled: false
     virtualNetwork: {
       id: vnetId
     }
